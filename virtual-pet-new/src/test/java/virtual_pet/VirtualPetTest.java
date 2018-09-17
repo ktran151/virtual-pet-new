@@ -15,8 +15,8 @@ public class VirtualPetTest {
 	@Test
 	public void acceptsNewName() {
 		VirtualPet underTest = new VirtualPet();
-		underTest.nameYourPet("James");
-		Assert.assertEquals("James", underTest.name);
+		underTest.nameYourPet("James Baxter");
+		Assert.assertEquals("James Baxter", underTest.name);
 	}
 
 	@Test
@@ -29,27 +29,73 @@ public class VirtualPetTest {
 	@Test
 	public void shouldFeedYourPet() {
 		VirtualPet underTest = new VirtualPet();
-		underTest.hunger = 60;
+		int startingHunger = 40;
+		underTest.hunger = startingHunger;
+		int pointsFromTicks = 10;
 		underTest.feedYourPet();
-		Assert.assertEquals(40, underTest.hunger);
+		Assert.assertEquals(startingHunger + VirtualPet.eatVariable - pointsFromTicks, underTest.hunger);
 	}
 
 	@Test
-	public void shouldRestYourPet() {
-		VirtualPet underTest = new VirtualPet();
-		underTest.sleep = 80;
-		underTest.restYourPet();
-		Assert.assertEquals(20, underTest.sleep);
-	}
-
-	public void checkTickAfterRest() {
+	public void shouldRest() {
 		VirtualPet underTest = new VirtualPet(); // arrange
-		int startingSleep = 80;
+		int startingSleep = 10;
 		underTest.sleep = startingSleep;
 		underTest.restYourPet(); // act
-		int numberOfTicksFromRest = 30;
-		int sleepAfterRest = startingSleep - numberOfTicksFromRest - 90;
+		int pointsFromTicks = 30;
+		int sleepAfterRest = startingSleep - pointsFromTicks + VirtualPet.restVariable;
 		Assert.assertEquals(sleepAfterRest, underTest.sleep); // assert
 	}
 
+	@Test
+	public void checkTickAfterRest() {
+		VirtualPet underTest = new VirtualPet(); // arrange
+		underTest.restYourPet();
+		Assert.assertEquals(3, underTest.tickVariable);
+
+	}
+
+	@Test
+	public void shouldPlay() {
+		VirtualPet underTest = new VirtualPet(); // arrange
+		int startingPlay = 0;
+		underTest.play = startingPlay;
+		int pointsFromTicks = 10;
+		underTest.playWithPet();
+		Assert.assertEquals(startingPlay + VirtualPet.playVariable - pointsFromTicks, underTest.play);
+	}
+
+	@Test
+	public void shouldPoop() {
+		VirtualPet underTest = new VirtualPet();
+		int startingPoop = 10;
+		underTest.poop = startingPoop;
+		int pointsFromTicks = 10;
+		underTest.takePetOut();
+		Assert.assertEquals(startingPoop + VirtualPet.poopVariable - pointsFromTicks, underTest.poop);
+	}
+
+	@Test
+	public void shouldChooseHunger() {
+		VirtualPet underTest = new VirtualPet();
+		underTest.hunger = 0;
+		VirtualPetApp.playerChoose(underTest, 1);
+		Assert.assertEquals(30, underTest.hunger);
+	}
+
+	@Test
+	public void deadAtNegFourty() {
+		VirtualPet underTest = new VirtualPet();
+		underTest.hunger = -40;
+		underTest.deadFromHunger(underTest.name, underTest.hunger);
+		Assert.assertEquals(false, underTest.isAlive);
+	}
+
+//	@Test
+//	public void shouldWarnIfHungry() {
+//		VirtualPet underTest = new VirtualPet();
+//		underTest.hunger = 10;
+//		underTest.hungryWarning(underTest.name, underTest.hunger);
+//		Assert.assertEquals(underTest.name + " is hungry", );
+//	}
 }
